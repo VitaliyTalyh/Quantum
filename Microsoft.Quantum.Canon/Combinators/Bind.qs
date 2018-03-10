@@ -1,6 +1,6 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the 
-// Microsoft Software License Terms for Microsoft Quantum Development Kit Libraries 
-// and Samples. See LICENSE in the project root for license information.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 
 namespace Microsoft.Quantum.Canon {
 
@@ -53,12 +53,15 @@ namespace Microsoft.Quantum.Canon {
     /// - @"microsoft.quantum.canon.binda"
     operation BindAImpl<'T>(operations : ('T => () : Adjoint)[], target : 'T) : () {
         body {
-            BindImpl(operations, target);
+            for (idxOperation in 0..Length(operations) - 1) {
+                let op = operations[idxOperation];
+                op(target);
+            }
         }
         adjoint {
             // TODO: replace with an implementation based on Reversed : 'T[] -> 'T[]
             //       and AdjointAll : ('T => () : Adjointable)[] -> ('T => () : Adjointable).
-            for (idxOperation in Length(operations) - 1..0) {
+            for (idxOperation in Length(operations) - 1..-1..0) {
                 let op = (Adjoint operations[idxOperation]);
                 op(target);
             }
